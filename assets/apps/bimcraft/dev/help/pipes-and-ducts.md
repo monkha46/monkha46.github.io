@@ -1,0 +1,85 @@
+---
+title: Pipes and ducts
+summary: Draw pipe and duct runs on the plan by their centre lines; the elbows, tees, reducers and transitions are made for you, the runs belong to systems with connected ports in the IFC file, and they show in plans, schedules and the takeoff.
+section: tasks
+order: 36
+keywords: pipe, pipes, piping, plumbing, duct, ducts, ductwork, hvac, mep, mechanical, elbow, tee, reducer, transition, fitting, fittings, valve, valves, gate valve, ball valve, globe valve, check valve, riser, slope, drain, sanitary, storm, vent, cold water, hot water, chilled water, heating, gas, fire protection, supply air, return air, exhaust, system, systems, port, ports, airflow, cfm, friction, equal friction, sizing, schedule, takeoff
+---
+
+## What you'll do
+
+Draw the pipes and ducts of a building the way you draw walls: click the corners of a run's centre line at the height you set. KHADRAW makes the fittings, puts each part in its system and connects them, so other programs read the run as one connected system.
+
+## Draw a pipe
+
+1. Turn on {{ui:Draw}}, open {{ui:Build}} and choose {{ui:Pipe}}.
+2. In the bar, pick the **system** (cold water, hot water, sanitary drain, gas…). It sets a usual material: copper for water, PVC for drains and vents, steel for heating, chilled water, gas and fire protection. Change the **material**, **class** and **size** if you need to. Sizes and walls come from public standards: steel pipe ASME B36.10M, copper tube ASTM B88, PVC ASTM D1785 and PEX ASTM F876.
+3. Set **At**: the height of the pipe's centre line above the level.
+4. Click where the pipe starts, then each corner. Double-click, or press {{key:Enter}}, at the last point. {{key:Backspace}} takes back the last corner; {{key:Esc}} drops the run.
+
+The pipe snaps like walls do, and to other runs: start on a pipe's end to carry on from it, or end on a pipe's line to branch off it. A new run takes the height of the pipe it snaps to.
+
+## Draw a duct
+
+1. Choose {{ui:Duct}}. Pick the system (supply, return, exhaust or outside air) and the shape: round, rectangular or flat oval.
+2. Type the width and height (a round duct's width is its diameter), and **At** for the centre line's height.
+3. To size it from the airflow, type the **Airflow** and the **Friction** rate and click {{ui:Size it}}. The duct is sized by equal friction, the method in the duct design chapter of the ASHRAE Handbook, and rounded up to a stocked size, so the friction comes out at or under the rate you typed. With no rate typed it uses 0.08 in. of water per 100 ft (0.8 Pa/m). A rectangular duct keeps the height you typed and gets a width; KHADRAW says so when its sides are more than 4 to 1.
+4. Click the corners as for a pipe.
+
+## The fittings, made for you
+
+| Where | What KHADRAW makes |
+|---|---|
+| A run turns | An elbow. Steel pipe at the long radius of ASME B16.9 (1.5 × the size), other pipe at one outside diameter, round duct at 1.5 diameters, rectangular duct at one width (or one height for a turn up or down) |
+| A run ends on another run's line | A tee; the other run is split there |
+| Two runs meet end to end at different sizes | A reducer (pipes) or a transition (ducts) |
+| Two runs of one size meet end to end at an angle | An elbow |
+
+When you change, move or delete a run, every fitting on that level is made again. If a leg is too short for the fittings at its ends, KHADRAW says so and changes nothing: move the corner further away.
+
+:::note
+The fittings and valves are generic: drawn from the pipe or duct size, not from a maker's catalogue. Socket, press and grooved fittings, valve bodies and equipment have makers' own sizes; check them with your supplier before you order.
+:::
+
+## Risers
+
+While drawing, type a new height in **At** and press {{key:Enter}}: the run goes straight up or down at the last corner, with an elbow at each end. A riser can go up into the level above. Each level shows the parts of a run its view range reaches, with **UP** or **DN** at the riser.
+
+## Drains and their slope
+
+Sanitary and storm drains start at the smallest slope the International Plumbing Code allows for their size: 1/4 in. per foot up to 2-1/2 in., 1/8 in. per foot from 3 to 6 in., 1/16 in. per foot from 8 in. Type another slope in the bar or in Properties: `1/4"/ft`, `2 %` or `1:50`. The run falls from its first point, so draw drains in the direction they flow. The plan shows the fall and an arrow. Properties warns when a drain is flatter than the code's minimum.
+
+## Valves
+
+1. Choose {{ui:Valve}} and the kind: gate, ball, globe or check.
+2. Click on a pipe where it goes. The pipe is cut round it and the valve is connected to both sides.
+
+Properties of the run lists its valves, each with {{ui:Remove}}.
+
+## Change a run
+
+Pick any part of a run, in the plan or the 3D view. In Properties:
+
+- **System**, **Material**, **Class** and **Size** (pipes), or **Shape**, **Width**, **Height** (ducts).
+- **Height above the level** moves the whole run up or down.
+- **Slope** (pipes).
+- **Flow** with {{ui:Size it}}: for water, the smallest size that keeps the water at 8 ft/s (2.4 m/s), or 5 ft/s (1.5 m/s) for hot water. For ducts, the velocity and friction rate of the duct as drawn. Drains are sized by fixture units, which KHADRAW does not do yet: pick their size yourself.
+
+Each change is one step of {{ui:Undo}}. {{key:Delete}} removes the whole run.
+
+## Plans
+
+- Pipes smaller than 150 mm (about 6 in.) are drawn as one line on their centre line, larger pipes and all ducts as two lines at their width.
+- Each system has its own colour; the plan PDF prints them in black.
+- Each run is labelled with its size and system (for example `2" CW` or `16×10 SA`).
+- A plan's view range decides which runs it shows, and {{ui:Shown in this plan}} can leave out **Pipes** or **Ducts**: see [Views, view ranges and your own sheets](topic:views-and-sheets).
+
+## Schedules and the takeoff
+
+The {{ui:Schedules}} panel adds **Pipes** (by system, material and size, with their lengths), **Ducts** (by system, shape and size, with lengths and the outside surface area) and **Fittings and valves** (by kind and size, counted). Click a row to pick what it lists; {{ui:Download CSV}} downloads it.
+
+{{ui:Takeoff}} takes the runs along to TakeoffCraft: pipe and duct by size as runs drawn on the plan (sloped drains measured along their slope), fittings and valves counted where they are: see [Send the model's quantities to TakeoffCraft](topic:takeoff). Risers are left out of that sheet, because a plan cannot measure them; the Pipes schedule has their length.
+
+## In the IFC file
+
+Each run is an assembly holding its parts: pipe and duct segments, fittings and valves, each with its type, material, a colour for its system and its ports. Touching ports are connected, and every part belongs to its distribution system (IFC2X3 files get the same as flow segments, fittings and controllers in a system). Other programs that read IFC systems see one connected run per system. The run's own definition is kept with it, so KHADRAW makes it again the same way when you change it.

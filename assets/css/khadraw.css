@@ -1,0 +1,257 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* KHADRAW Graphite — the look of KHADRAW's ModelCraft and BimCraft (design: the "KHADRAW UX/UI" canvas).
+ * Loaded LAST, after tokens.css, site.css, app-shell.css, app-input.css and the app's own CSS, so CadCraft's files stay
+ * as upstream has them. Byte-identical in modelcraft/devshell/site/assets/css and bimcraft/devshell/site/assets/css.
+ *
+ *  - The same tokens CadCraft uses (--sheet, --sheet-2, --ink, --ink-2, --line, --grid, --action, --radius, --font),
+ *    set to Graphite for model space (dark, the default on a dark OS) and paper space (light).
+ *  - New tokens: --ground (behind the panels), --raised (inputs, hover), --edge (the app's own borders: soft, where
+ *    CadCraft draws them in ink), --accent-soft (a selected tool or row), --measure (numbers, lengths, warnings),
+ *    --ok, --mono, --radius-lg (panels, dialogs).
+ *  - The app's chrome (panels, bars, dialogs, buttons, inputs) takes --edge for its borders; drawings, title blocks and
+ *    plotted sheets keep CadCraft's ink pens.
+ * Contrast (checked): ink-2 on sheet-2 ≥ 7.9:1 and ink-3 ≥ 4.6:1 in both spaces; the accent on sheet-2 ≥ 6.1:1 (dark),
+ * ≥ 5.4:1 (light); text on the accent (on-action) ≥ 6.6:1 (dark), ≥ 5.4:1 (light).
+ */
+
+@font-face { font-family: 'Sarabun'; font-style: normal; font-weight: 400; font-display: swap; src: url(/assets/fonts/sarabun/Sarabun-Regular.ttf) format('truetype'); }
+@font-face { font-family: 'Sarabun'; font-style: normal; font-weight: 600 700; font-display: swap; src: url(/assets/fonts/sarabun/Sarabun-Bold.ttf) format('truetype'); }
+
+/* ---------------------------------------------------------------------------------------------------- tokens */
+:root {
+  /* paper space (light) */
+  --ground:  #F4F5F7;
+  --sheet:   #F4F5F7;
+  --sheet-2: #FFFFFF;
+  --raised:  #EEF0F3;
+  --ink:     #141920;
+  --ink-2:   #4A5463;
+  --ink-3:   #687282;
+  --edge:    #D8DCE2;
+  --line:    #8A95A3;
+  --grid:    #E1E5EA;
+  --action:  #2364D2;
+  --on-action: #FFFFFF;
+  --accent-soft: color-mix(in srgb, var(--action) 12%, transparent);
+  --measure: #9A6200;
+  --ok:      #17703A;
+  --radius:    6px;
+  --radius-lg: 10px;
+  --font: 'IBM Plex Sans Thai', 'Sarabun', 'Leelawadee UI', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', 'Cascadia Mono', 'JetBrains Mono', Consolas, ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-space="paper"]) {
+    --ground:  #101318;
+    --sheet:   #12161C;
+    --sheet-2: #171B22;
+    --raised:  #1F252E;
+    --ink:     #E9EDF2;
+    --ink-2:   #A9B3C1;
+    --ink-3:   #7D8796;
+    --edge:    #2C3440;
+    --line:    #5C6878;
+    --grid:    #262D38;
+    --action:  #5B9CFF;
+    --on-action: #0B1220;
+    --accent-soft: color-mix(in srgb, var(--action) 16%, transparent);
+    --measure: #F5B547;
+    --ok:      #45C486;
+    --placeholder: #7FA9DC;
+  }
+}
+:root[data-space="model"] {
+  --ground:  #101318;
+  --sheet:   #12161C;
+  --sheet-2: #171B22;
+  --raised:  #1F252E;
+  --ink:     #E9EDF2;
+  --ink-2:   #A9B3C1;
+  --ink-3:   #7D8796;
+  --edge:    #2C3440;
+  --line:    #5C6878;
+  --grid:    #262D38;
+  --action:  #5B9CFF;
+  --on-action: #0B1220;
+  --accent-soft: color-mix(in srgb, var(--action) 16%, transparent);
+  --measure: #F5B547;
+  --ok:      #45C486;
+  --placeholder: #7FA9DC;
+}
+
+/* Thai text needs room above and below for its vowels and tone marks */
+body { font-family: var(--font); line-height: 1.55; }
+:lang(th) body, html[lang="th"] body { line-height: 1.6; }
+
+/* ---------------------------------------------------------------------------------------------------- buttons */
+.btn-plot, .btn-line, .btn-primary, .btn-outline-primary, .btn-outline-secondary {
+  font-family: var(--font); font-weight: 600; font-stretch: normal; letter-spacing: 0;
+  border-radius: var(--radius); border-width: var(--pen-1); transition: background-color .12s, border-color .12s, color .12s;
+}
+.btn-plot, .btn-primary { border-color: var(--action); }
+.btn-plot:hover, .btn-primary:hover, .btn-plot:focus-visible, .btn-primary:focus-visible {
+  background: color-mix(in srgb, var(--action) 86%, var(--ink)); border-color: transparent; color: var(--on-action);
+}
+.btn-line, .btn-outline-primary, .btn-outline-secondary { background: var(--raised); color: var(--ink); border-color: var(--edge); }
+.btn-line:hover, .btn-outline-primary:hover, .btn-outline-secondary:hover { background: color-mix(in srgb, var(--raised) 70%, var(--ink) 8%); color: var(--ink); border-color: var(--line); }
+.btn-sm-cc { min-height: 2.25rem; padding: .4rem .85rem; font-size: .875rem; }
+.btn-plot:focus-visible, .btn-line:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--action); outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------------------------------- inputs */
+.form-control, .select-cc, .form-cc select, .form-select, .bc-input, .cc-render .form-control {
+  background-color: var(--ground); color: var(--ink); border: var(--pen-1) solid var(--edge); border-radius: var(--radius);
+}
+.form-control:hover, .select-cc:hover, .bc-input:hover { border-color: var(--line); }
+.form-control:focus, .select-cc:focus, .bc-input:focus { border-color: var(--action); box-shadow: 0 0 0 3px var(--accent-soft); }
+input[type="number"], .bc-num, [data-mp-ffx], [data-mp-ffy], .mc-vcb input, .bc-vcb input { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+input[type="range"] { accent-color: var(--action); }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--action); }
+
+/* ---------------------------------------------------------------------------------------------------- the app's chrome: soft edges */
+.mc-tools, .mc-left, .mc-right, .mc-status, .mc-timeline,
+.bc-left, .bc-right, .bc-rtabs, .bc-status:not(:empty),
+main.shell-panels-managed > aside[data-shell-dock],
+.shell-pw-bar, .app-bar, .app-bar-ver summary, .app-bar-ver ul, .space-toggle, .space-toggle button + button,
+.shell-assist-btn, .status-chip, .rule-box, .bc-placebar-row .bc-tool, .bc-modelbar .bc-tool, .bc-mb-menu {
+  border-color: var(--edge);
+}
+.mc-tools, .mc-status, .mc-timeline, .bc-rtabs { background: var(--sheet-2); }
+.mc-left, .mc-right, .bc-left, .bc-right { background: var(--sheet-2); }
+.mc-left, .mc-right, .bc-left, .bc-right, main.shell-panels-managed > aside[data-shell-dock] { border-width: var(--pen-1); }
+.mc-tools, .mc-timeline, .bc-rtabs { border-bottom-width: var(--pen-1); }
+
+/* the app bar: quiet buttons, the build badge as a soft pill */
+.app-bar-btn, .app-bar-fs { border-color: var(--edge); background: var(--raised); color: var(--ink); border-radius: var(--radius); font-weight: 500; }
+.app-bar-btn:hover, .app-bar-fs:hover { border-color: var(--line); background: color-mix(in srgb, var(--raised) 70%, var(--ink) 8%); }
+.app-bar-area { border-color: var(--edge); color: var(--ink-3); border-radius: 999px; font-weight: 500; }
+.space-toggle { border-radius: 8px; padding: 2px; gap: 2px; background: var(--ground); }
+.space-toggle button { border: 0; border-radius: 6px; color: var(--ink-2); background: transparent; }
+.space-toggle button + button { border-left: 0; }
+:root[data-space="paper"] .space-toggle button[value="paper"], :root[data-space="model"] .space-toggle button[value="model"],
+.space-toggle button[aria-pressed="true"] { background: var(--raised); color: var(--ink); box-shadow: inset 0 0 0 1px var(--edge); }
+@media (prefers-color-scheme: dark) { :root:not([data-space]) .space-toggle button[value="model"] { background: var(--raised); color: var(--ink); } }
+@media (prefers-color-scheme: light) { :root:not([data-space]) .space-toggle button[value="paper"] { background: var(--raised); color: var(--ink); } }
+.space-toggle button:hover { text-decoration: none; color: var(--ink); }
+.app-bar .layer-swatch { border-radius: 4px; border-color: transparent; background: var(--action); }
+
+/* tool buttons: quiet until hovered; the active tool on the accent's soft tint */
+.mc-tool, .bc-tool {
+  border-radius: 8px; border-color: transparent; color: var(--ink-2); transition: background-color .12s, color .12s;
+}
+.mc-tool:hover, .bc-tool:hover { background: var(--raised); color: var(--ink); }
+.mc-tool[aria-pressed="true"], .mc-tool.is-active, .bc-tool[aria-pressed="true"], .bc-tool.is-active {
+  background: var(--accent-soft); color: var(--action); border-color: transparent;
+}
+
+/* ---------------------------------------------------------------------------------------------------- dialogs */
+dialog.mc-dialog, dialog.bc-dialog, dialog.bc-sheets, dialog.cc-render, dialog.cc-in-dlg, .mc-dialog, .bc-dialog, .cc-render, .cc-in-dlg {
+  background: var(--sheet-2); color: var(--ink); border: var(--pen-1) solid var(--edge); border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .35);
+}
+dialog::backdrop { background: color-mix(in srgb, #05070A 55%, transparent); }
+.cc-render-head, .cc-render-foot { border-color: var(--edge); }
+.cc-render-pic { background: var(--ground); border-color: var(--edge); border-radius: 8px; overflow: hidden; }
+.cc-render-form legend, .bc-dialog h2, .mc-dialog h2 { font-weight: 600; }
+.cc-render-form legend { font-size: .75rem; letter-spacing: .04em; color: var(--ink-3); text-transform: none; }
+.cc-render-swatch { border-color: var(--edge); border-radius: 4px; }
+
+/* ---------------------------------------------------------------------------------------------------- tables, numbers, notes */
+.bc-qto-table th, .bc-ftable thead th { border-color: var(--edge); color: var(--ink-2); }
+.bc-qto-table td, .bc-ftable td { border-color: var(--edge); }
+.cc-render-note { color: var(--ink-3); }
+.mc-status output, .bc-measure, [data-fu-out] td:nth-child(n+2):nth-child(-n+5), [data-dv-out] td:nth-child(n+2) { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* scrollbars that match the panels */
+* { scrollbar-color: color-mix(in srgb, var(--ink-3) 55%, transparent) transparent; scrollbar-width: thin; }
+
+/* ==================================================================================================== layout (khadraw-layout.js) */
+/* mode tabs in the app bar */
+.kd-modes { display: inline-flex; gap: 2px; padding: 2px; border: var(--pen-1) solid var(--edge); border-radius: 8px; background: var(--ground); flex: 0 0 auto; }
+.kd-mode { display: inline-flex; align-items: center; gap: .35rem; height: 2rem; padding: 0 .75rem; border: 0; border-radius: 6px; background: transparent; color: var(--ink-2); font: 500 .8125rem var(--font); cursor: pointer; white-space: nowrap; }
+.kd-mode .bi { font-size: .95rem; }
+.kd-mode:hover:not(:disabled) { color: var(--ink); background: var(--raised); }
+.kd-mode[aria-pressed="true"] { color: var(--ink); background: var(--raised); box-shadow: inset 0 0 0 1px var(--edge); font-weight: 600; }
+.kd-mode[aria-pressed="true"] .bi { color: var(--action); }
+.kd-mode:disabled { opacity: .45; cursor: default; }
+
+/* command search: a field-like button; Ctrl+K opens the same palette */
+.kd-search { display: inline-flex; align-items: center; gap: .5rem; flex: 0 1 22rem; min-width: 10rem; height: 2.25rem; padding: 0 .5rem 0 .75rem;
+  border: var(--pen-1) solid var(--edge); border-radius: 8px; background: var(--ground); color: var(--ink-3); font: 400 .8125rem var(--font); cursor: pointer; }
+.kd-search:hover { border-color: var(--line); color: var(--ink-2); }
+.kd-search-label { flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kd-search kbd, .kd-palette kbd { font: 500 .6875rem var(--mono); color: var(--ink-2); background: transparent; border: var(--pen-1) solid var(--edge); border-radius: 4px; padding: .05rem .35rem; box-shadow: none; }
+@media (max-width: 1180px) { .kd-search-label, .kd-search kbd { display: none; } .kd-search { flex: 0 0 auto; min-width: 0; } .kd-mode span { display: none; } }
+
+.kd-palette { width: min(40rem, calc(100vw - 2rem)); margin-top: 12vh; padding: 0; background: var(--sheet-2); color: var(--ink); border: var(--pen-1) solid var(--edge); border-radius: var(--radius-lg); box-shadow: 0 24px 64px rgba(0, 0, 0, .4); }
+.kd-pal-head { display: flex; align-items: center; gap: .6rem; padding: .7rem .9rem; border-bottom: var(--pen-1) solid var(--edge); color: var(--ink-3); }
+.kd-pal-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font: 400 1rem var(--font); }
+.kd-pal-input:focus-visible { outline: 0; }
+.kd-pal-list { list-style: none; margin: 0; padding: .35rem; max-height: min(26rem, 60vh); overflow: auto; }
+.kd-pal-item { display: flex; align-items: center; gap: .75rem; padding: .5rem .65rem; border-radius: 6px; cursor: pointer; font-size: .875rem; }
+.kd-pal-item[aria-selected="true"] { background: var(--accent-soft); }
+.kd-pal-item[aria-disabled="true"] { opacity: .5; cursor: default; }
+.kd-pal-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kd-pal-group { color: var(--ink-3); font-size: .75rem; white-space: nowrap; }
+.kd-pal-none { padding: 1rem; color: var(--ink-3); text-align: center; }
+
+/* ModelCraft: the Draw / Modify / Organize groups as a rail floating over the 3D view (a second .mc-tools) */
+.mc-tools.kd-rail { position: absolute; z-index: 4; top: .75rem; left: .75rem; grid-area: auto; display: flex; flex-direction: column; flex-wrap: nowrap; gap: 0;
+  max-height: calc(100% - 1.5rem); overflow: visible; padding: .3rem; background: var(--sheet-2); border: var(--pen-1) solid var(--edge); border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
+.kd-rail .mc-tool-group { border: 0; padding: .25rem 0; }
+.kd-rail .mc-tool-group + .mc-tool-group { border-top: var(--pen-1) solid var(--edge); }
+.kd-rail .mc-tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.kd-rail .mc-tool-row { display: grid; grid-template-columns: repeat(2, 2.5rem); gap: 2px; }
+.kd-rail .mc-tool { width: 2.5rem; height: 2.5rem; min-width: 0; padding: 0; justify-content: center; }
+.kd-rail .mc-tool > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.kd-rail .mc-tool .bi { font-size: 1.2rem; color: inherit; }
+.kd-rail .mc-menu-list { top: 0; left: calc(100% + .6rem); }
+@media (max-height: 780px) { .kd-rail .mc-tool-row { grid-template-columns: repeat(3, 2.5rem); } .kd-has-rail .mc-hint, .kd-has-rail .mc-guide { left: calc(1rem + 9rem); } }
+.kd-has-rail .mc-hint, .kd-has-rail .mc-guide { left: calc(1rem + 6.4rem); max-width: min(31rem, calc(100% - 8.5rem)); }
+/* the bar above keeps File, Edit and Camera: one short row */
+.kd-has-rail main.mc > .mc-tools:not(.kd-rail) { flex-wrap: wrap; align-items: stretch; }
+.kd-has-rail main.mc > .mc-tools:not(.kd-rail) .mc-tool-group { flex-direction: row; align-items: center; gap: .35rem; padding: .3rem .6rem; }
+.kd-has-rail main.mc > .mc-tools:not(.kd-rail) .mc-tool-label { padding: 0 .25rem 0 0; color: var(--ink-3); font-weight: 600; }
+.kd-has-rail main.mc > .mc-tools:not(.kd-rail) .mc-tool { flex-direction: row; gap: .35rem; padding: .3rem .5rem; font-weight: 500; font-size: .8125rem; }
+.mc-tool .bi { color: inherit; }
+@media (max-width: 760px) { .mc-tools.kd-rail { position: static; flex-direction: row; overflow-x: auto; border-radius: 0; box-shadow: none; } .kd-rail .mc-tool-row { display: flex; } }
+/* the app bar with the tabs and the search: name on one line; the about link only on wide screens */
+.app-bar-name, .app-bar-area { white-space: nowrap; }
+.app-bar:has(.kd-modes) .app-bar-links { display: none; }
+@media (min-width: 1700px) { .app-bar:has(.kd-modes) .app-bar-links { display: flex; } }
+.app-bar:has(.kd-modes) .kd-search { margin-right: auto; }
+
+/* ==================================================================================================== BimCraft's bars over the model */
+/* the view bar (Fit, Top … Measure): one floating row of icons, the names in their tooltips */
+.bc-toolbar { gap: 2px; padding: .25rem; background: var(--sheet-2); border: var(--pen-1) solid var(--edge); border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.bc-tool { border-right: 0; border-radius: 8px; color: var(--ink-2); font-weight: 500; font-size: .8125rem; transition: background-color .12s, color .12s; }
+.bc-tool:hover { background: var(--raised); color: var(--ink); }
+.bc-tool[aria-pressed="true"] { background: var(--accent-soft); color: var(--action); }
+.bc-tool .bi { font-size: 1.05rem; }
+.bc-tool-sep { width: var(--pen-1); margin: .3rem .15rem; background: var(--edge); }
+.bc-toolbar > .bc-tool { padding: .45rem; }
+.bc-toolbar > .bc-tool > span, .bc-toolbar > details > summary.bc-tool > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* the drawing bar (level, view, Select, Wall … Build, Modify, Annotate, Plan / Split / 3D) */
+.bc-modelbar { padding: .4rem .5rem; background: var(--sheet-2); border: var(--pen-1) solid var(--edge); border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.bc-modelbar .bc-tool { padding: .3rem .55rem; border: var(--pen-1) solid transparent; border-radius: 8px; }
+.bc-modelbar .bc-tool:hover { border-color: transparent; }
+.bc-mb-more:has([data-mtool][aria-pressed="true"]) > summary { background: var(--accent-soft); color: var(--action); }
+.bc-mb-menu { padding: .35rem; background: var(--sheet-2); border: var(--pen-1) solid var(--edge); border-radius: 10px; box-shadow: 0 12px 32px rgba(0, 0, 0, .28); }
+.bc-mb-select, .bc-modelbar .bc-input { background: var(--ground); border-color: var(--edge); border-radius: 6px; padding: .3rem .5rem; }
+.bc-modelbar-row + .bc-modelbar-row { padding-top: .35rem; border-top: var(--pen-1) solid var(--edge); }
+/* the plan beside / above the 3D view */
+.bc-stage.is-plan-split .bc-plan { border-right: var(--pen-1) solid var(--edge); }
+.bc-stage.is-plan-split.is-plan-stacked .bc-plan { border-bottom: var(--pen-1) solid var(--edge); }
+/* the right panel's tabs: the chosen one on the accent, not black */
+.bc-rtabs { border-bottom: var(--pen-1) solid var(--edge); gap: 2px; padding: .3rem; }
+.bc-rtab { border-right: 0; border-radius: 6px; font-weight: 600; padding: .45rem .6rem; }
+.bc-rtab:hover { background: var(--raised); color: var(--ink); }
+.bc-rtab[aria-selected="true"] { color: var(--action); background: var(--accent-soft); }
+
+/* the KHADRAW mark and wordmark (logo B: the K drawn with drafting lines) */
+.app-bar-mark .kd-logo { display: block; border-radius: 6px; }
+.app-bar:has(.kd-logo) .layer-swatch { display: none; }
+.kd-wordmark { font-weight: 400; letter-spacing: .04em; font-stretch: normal; }
+.kd-wordmark strong { font-weight: 700; }
